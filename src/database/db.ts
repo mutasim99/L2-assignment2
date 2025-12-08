@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: path.join(process.cwd(), '.env') });
 
-const pool = new Pool({
+export const pool = new Pool({
     connectionString: process.env.CONNECTION_STR
 });
 
