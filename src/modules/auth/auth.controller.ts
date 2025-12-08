@@ -47,20 +47,34 @@ const signUpUser = async (req: Request, res: Response) => {
         const { name, email, password, phone, role } = req.body;
         if (!name || !email || !password || !phone === undefined) {
             return res.status(400).json({
-                success:false,
-                message:'validation error',
-                errors:'name, email, password and phone are required'
+                success: false,
+                message: 'validation error',
+                errors: 'name, email, password and phone are required'
             });
         };
         const phoneNumber = Number(phone);
         if (Number.isNaN(phoneNumber)) {
             return res.status(400).json({
-                success:false,
-                message:'validation error',
-                errors:'phone must be a valid number'
+                success: false,
+                message: 'validation error',
+                errors: 'phone must be a valid number'
             })
         };
-        
+
+        const user = await authServices.signupUserIntoDb({
+            name,
+            email,
+            password,
+            phone: phoneNumber,
+            role
+        });
+
+        return res.status(201).json({
+            success: true,
+            message: 'user registered successfully',
+            data: user
+        })
+
     } catch (error: any) {
         return res.status(400).json({
             success: false,
@@ -68,4 +82,9 @@ const signUpUser = async (req: Request, res: Response) => {
             errors: error.message
         })
     }
-} 
+};
+
+export const authController = {
+    logInUser,
+    signUpUser
+}
