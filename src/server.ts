@@ -2,6 +2,7 @@ import express from 'express'
 import cors from 'cors'
 import { authRoutes } from './modules/auth/auth.routes';
 import { initDb } from './database/db';
+import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
 const app = express();
 const port = 5000;
 
@@ -9,11 +10,11 @@ app.use(cors());
 app.use(express.json());
 
 
-app.get('/', async (req, res) => {
-    res.send('create a server')
-});
-
+/* user routes */
 app.use('/api/v1/auth', authRoutes);
+
+/* vehicles route */
+app.use('/api/v1/vehicles', vehicleRoutes)
 
 app.use((req, res) => {
     return res.status(404).json({
