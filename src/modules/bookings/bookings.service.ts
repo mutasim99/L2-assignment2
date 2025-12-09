@@ -66,5 +66,74 @@ const CreateBookingInDb = async (payload: CreateBookingInput) => {
 };
 
 const getAllBookingsForAdminFromDb = async () => {
-    
+    const result = await pool.query(`
+        SELECT
+        b.id,
+        b.customer_id,
+        b.vehicle_id,
+        b.rent_start_date,
+        b.rent_end_date,
+        b.total_price,
+        b.status,
+        u.name as customer_name,
+        u.email as customer_email,
+        v.vehicle-name,
+        v.registration_number
+        FROM bookings b
+        JOIN users u ON b.customer_id = u.id
+        JOIN vehicles v ON b.vehicles_id = v.id
+        ORDER BY b.id
+        `)
+    return result.rows
+};
+
+const getBookingsForCustomerFromDb = async (customerId: number) => {
+    const result = await pool.query(`
+        SELECT
+        b.id,
+        b.vehicle_id,
+        b.rent_start_date,
+        b.rent_end_date,
+        b.total_price,
+        b.status,
+        v.vehicle_name,
+        v.registration_number,
+        v.type
+        FROM bookings b
+        JOIN vehicles v ON b.vehicle_id = v.id
+        WHERE b.customer_id = $1
+        ORDER BY b.id
+        `, [customerId]);
+    return result.rows;
+};
+
+const getBookingByIdFromDb = async (bookingId: number) => {
+    const result = await pool.query(`
+        SELECT * FROM bookings WHERE id = $1
+        `, [bookingId]);
+    return result.rows[0]
+};
+
+const updateBookingStatusInDb = async (bookingId: number, status:BookingStatus) => {
+    const result = await pool.query(`
+        UPDATE bookings SET status = $1
+        WHERE id = $2
+        RETURNING *
+        `, [status, bookingId])
+        return result.rows[0];
+};
+
+const setVehicleAvailability = async(vehicleId:number, status:'available' | 'booked')=>{
+    await pool.query(`
+        UPDATE vehicles SET availability_status = $1 WHERE id = $2
+        `, [status, vehicleId])
+};
+
+export const bookingsServices = {
+    CreateBookingInDb,
+    getAllBookingsForAdminFromDb,
+    getBookingsForCustomerFromDb,
+    getBookingByIdFromDb,
+    updateBookingStatusInDb,
+    setVehicleAvailability
 }
