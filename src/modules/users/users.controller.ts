@@ -122,4 +122,46 @@ const updateUser = async (req: AuthRequest, res: Response) => {
             error: error.message
         })
     }
+};
+
+const deleteUser = async (req: AuthRequest, res: Response)=>{
+    try {
+        const userId = Number(req.params.userId);
+
+        const existingUser = await userServices.getUserByIdFromDb(userId);
+        if (!existingUser) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            })
+        };
+
+        const hasActive = await userServices.hasActiveBookings(userId);
+        if (hasActive) {
+            return res.status(400).json({
+                success: false,
+                message: 'Bad Request',
+                error: 'User can not be deleted when they have active bookings'
+            })
+        };
+
+        await userServices.deleteUserFromDb(userId);
+
+        return res.status(200).send({
+            success: true,
+            message: 'User deleted successfully'
+        })
+    } catch (error: any) {
+        return res.status(400).json({
+            success: false,
+            message: 'Bad Request',
+            error: error.message
+        })
+    }
+};
+
+export const userController = {
+    getAllUsers,
+    updateUser,
+    deleteUser
 }

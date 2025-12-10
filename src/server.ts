@@ -4,6 +4,7 @@ import { authRoutes } from './modules/auth/auth.routes';
 import { initDb } from './database/db';
 import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
 import { bookingsRoutes } from './modules/bookings/bookings.routes';
+import { usersRoutes } from './modules/users/users.routes';
 const app = express();
 const port = 5000;
 
@@ -11,9 +12,11 @@ app.use(cors());
 app.use(express.json());
 
 
-/* user routes */
+/* auth routes */
 app.use('/api/v1/auth', authRoutes);
 
+/* user routes */
+app.use('/api/v1/users', usersRoutes)
 /* vehicles route */
 app.use('/api/v1/vehicles', vehicleRoutes);
 
