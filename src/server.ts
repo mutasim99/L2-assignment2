@@ -3,6 +3,7 @@ import cors from 'cors'
 import { authRoutes } from './modules/auth/auth.routes';
 import { initDb } from './database/db';
 import { vehicleRoutes } from './modules/vehicles/vehicles.routes';
+import { bookingsRoutes } from './modules/bookings/bookings.routes';
 const app = express();
 const port = 5000;
 
@@ -14,7 +15,11 @@ app.use(express.json());
 app.use('/api/v1/auth', authRoutes);
 
 /* vehicles route */
-app.use('/api/v1/vehicles', vehicleRoutes)
+app.use('/api/v1/vehicles', vehicleRoutes);
+
+/*Booking routes  */
+app.use('/api/v1/bookings', bookingsRoutes);
+
 
 app.use((req, res) => {
     return res.status(404).json({

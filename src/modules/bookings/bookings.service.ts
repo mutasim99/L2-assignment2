@@ -48,6 +48,8 @@ const CreateBookingInDb = async (payload: CreateBookingInput) => {
     /* Create a bookings */
     const bookingResult = await pool.query(`
         INSERT INTO bookings (customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status)
+        VALUES($1, $2, $3, $4, $5, 'active')
+        RETURNING id, customer_id, vehicle_id, rent_start_date, rent_end_date, total_price, status
         `, [customer_id, vehicle_id, rent_start_date, rent_end_date, totalPrice]);
 
     /* update vehicle status */
@@ -77,11 +79,11 @@ const getAllBookingsForAdminFromDb = async () => {
         b.status,
         u.name as customer_name,
         u.email as customer_email,
-        v.vehicle-name,
+        v.vehicle_name,
         v.registration_number
         FROM bookings b
         JOIN users u ON b.customer_id = u.id
-        JOIN vehicles v ON b.vehicles_id = v.id
+        JOIN vehicles v ON b.vehicle_id = v.id
         ORDER BY b.id
         `)
     return result.rows
