@@ -26,7 +26,7 @@ const getUserByIdFromDb = async (userId: number) => {
     return result.rows[0];
 };
 
-const isEmailTakenByAntherUser = async (email: string, userId: number) => {
+const isEmailTakenByAnotherUser = async (email: string, userId: number) => {
     const result = await pool.query(`
         SELECT id
         FROM users
@@ -101,7 +101,7 @@ const deleteUserFromDb = async (userId: number) => {
 export const userServices = {
     getAllUsersFromDb,
     getUserByIdFromDb,
-    isEmailTakenByAntherUser,
+    isEmailTakenByAnotherUser,
     updateUserInDb,
     hasActiveBookings,
     deleteUserFromDb
