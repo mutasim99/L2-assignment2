@@ -45,7 +45,7 @@ const createBooking = async (req: AuthRequest, res: Response) => {
             rent_start_date,
             rent_end_date
         });
-        return res.status(201).json({
+        return res.status(200).json({
             success: true,
             message: 'Booking created successfully',
             data: booking

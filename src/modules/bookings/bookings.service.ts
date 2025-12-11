@@ -67,6 +67,7 @@ const CreateBookingInDb = async (payload: CreateBookingInput) => {
     };
 };
 
+/* Get all bookings */
 const getAllBookingsForAdminFromDb = async () => {
     const result = await pool.query(`
         SELECT
@@ -89,6 +90,7 @@ const getAllBookingsForAdminFromDb = async () => {
     return result.rows
 };
 
+/* Get bookings for customer */
 const getBookingsForCustomerFromDb = async (customerId: number) => {
     const result = await pool.query(`
         SELECT
@@ -116,16 +118,16 @@ const getBookingByIdFromDb = async (bookingId: number) => {
     return result.rows[0]
 };
 
-const updateBookingStatusInDb = async (bookingId: number, status:BookingStatus) => {
+const updateBookingStatusInDb = async (bookingId: number, status: BookingStatus) => {
     const result = await pool.query(`
         UPDATE bookings SET status = $1
         WHERE id = $2
         RETURNING *
         `, [status, bookingId])
-        return result.rows[0];
+    return result.rows[0];
 };
 
-const setVehicleAvailability = async(vehicleId:number, status:'available' | 'booked')=>{
+const setVehicleAvailability = async (vehicleId: number, status: 'available' | 'booked') => {
     await pool.query(`
         UPDATE vehicles SET availability_status = $1 WHERE id = $2
         `, [status, vehicleId])

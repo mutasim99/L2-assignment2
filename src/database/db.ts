@@ -28,7 +28,7 @@ export const initDb = async () => {
         availability_status VARCHAR(50) NOT NULL CHECK (availability_status IN ('available', 'booked'))
         );
 
-        CREATE TABLE IF NOT EXISTS Bookings(
+        CREATE TABLE IF NOT EXISTS bookings(
         id SERIAL PRIMARY KEY,
         customer_id INT NOT NULL REFERENCES users(id),
         vehicle_id INT NOT NULL REFERENCES vehicles(id),
@@ -39,5 +39,4 @@ export const initDb = async () => {
         )       
         `)
     console.log('database connected');
-
 }
