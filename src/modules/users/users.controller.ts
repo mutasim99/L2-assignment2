@@ -2,7 +2,7 @@ import { json, Response } from "express";
 import { AuthRequest } from "../../middlewares/auth.middleware";
 import { UpdateUserInput, userServices } from "./users.service";
 
-
+/* Get all users */
 const getAllUsers = async (req: AuthRequest, res: Response) => {
     try {
         const user = await userServices.getAllUsersFromDb();
@@ -20,6 +20,57 @@ const getAllUsers = async (req: AuthRequest, res: Response) => {
         });
     }
 };
+
+/* Get a single user */
+
+const getUserById = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Unauthorized',
+                error: 'User not authenticated'
+            })
+        };
+
+        const userId = Number(req.params.userId);
+        if (Number.isNaN(userId)) {
+            return res.status(400).json({
+                success: 'false',
+                message: 'Validation error',
+                error: 'Invalid userId'
+            })
+        };
+
+        if (req.user.role !== 'admin' && req.user.id !== userId) {
+            return res.status(403).json({
+                success: false,
+                message: 'Forbidden',
+                error: 'You can only view your own profile'
+            })
+        };
+
+        const user = await userServices.getUserByIdFromDb(userId);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'User not found'
+            })
+        };
+
+        return res.status(200).json({
+            success: true,
+            message: 'User retrieved successfully',
+            data: user
+        })
+    } catch (error: any) {
+        return res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            error: `Error:${error.message}`
+        })
+    }
+}
 
 
 /* update user [admin or own profile]*/
@@ -124,7 +175,8 @@ const updateUser = async (req: AuthRequest, res: Response) => {
     }
 };
 
-const deleteUser = async (req: AuthRequest, res: Response)=>{
+/* Delete an user */
+const deleteUser = async (req: AuthRequest, res: Response) => {
     try {
         const userId = Number(req.params.userId);
 
@@ -162,6 +214,7 @@ const deleteUser = async (req: AuthRequest, res: Response)=>{
 
 export const userController = {
     getAllUsers,
+    getUserById,
     updateUser,
     deleteUser
 }

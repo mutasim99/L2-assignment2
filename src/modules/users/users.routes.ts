@@ -13,6 +13,13 @@ router.get(
     userController.getAllUsers
 );
 
+/* Get user by id */
+router.get(
+    '/:userId',
+    auth,
+    userController.getUserById
+)
+
 /* Update user [admin or own profile] */
 router.put(
     '/:userId',

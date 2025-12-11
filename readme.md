@@ -11,7 +11,7 @@ Built using **Node.js, Typescript, Express.js and postgreSQL** with **JWT-based 
 https://
 
 **GitHub Repository:**
-https://
+https://github.com/mutasim99/L2-assignment2
 
 ---
 
